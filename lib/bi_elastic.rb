@@ -14,6 +14,23 @@ module BiElastic
     yield(configuration)
   end
 
+  # Environment specific configuration options
+  class Configuration
+    attr_accessor :disabled
+    attr_accessor :elastic_user
+    attr_accessor :elastic_password
+    attr_accessor :elastic_host
+    attr_accessor :reporter
+
+    def initialize
+      @elastic_host = 'example.com'
+      @elastic_user = 'elastic'
+      @elastic_password = 'changeme'
+      @reporter = 'x'
+      @disabled = false
+    end
+  end
+
   class Client
     def initialize
       @host = BiElastic.configuration.elastic_host
@@ -57,12 +74,12 @@ module BiElastic
     end
 
     def check_order_args(args)
-      mandatory = %i[reporter category created_at revenue organisation upsell source referrer forwarder transport].sort
+      mandatory = %i(reporter category created_at revenue organisation upsell source referrer forwarder transport).sort
       raise "keys needed: #{mandatory}" unless args.keys.sort == mandatory
     end
 
     def check_uniq_args(args)
-      mandatory = %i[reporter forwarder source created_at].sort
+      mandatory = %i(reporter forwarder source created_at).sort
       raise "keys needed: #{mandatory}" unless args.keys.sort == mandatory
     end
 
